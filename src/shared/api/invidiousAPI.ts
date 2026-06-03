@@ -57,6 +57,7 @@ function isInternalApiPath(url: string): boolean {
     path.startsWith("/v1/playlists/") ||
     path === "/v1/auth/profile" ||
     path === "/v1/auth/login" ||
+    path === "/v1/auth/register" ||
     path === "/v1/auth/logout" ||
     path === "/v1/auth/feed"
   )

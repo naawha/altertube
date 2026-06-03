@@ -21,6 +21,9 @@ export type InvidiousFeedResponse = {
   videos?: InvidiousShortVideo[]
 }
 
+/** Максимум элементов в ответе GET /api/v1/auth/feed. */
+export const FEED_MAX_ITEMS = 60
+
 function pickThumbnail(thumbnails: InvidiousThumbnail[] | undefined): string {
   if (!thumbnails?.length) return ""
   const medium = thumbnails.find((t) => t.quality === "medium")
@@ -45,6 +48,26 @@ export function mergeInvidiousFeedItems(
     out.push(v)
   }
   return out
+}
+
+/** Обрезает ленту до `max` элементов, сохраняя порядок mergeInvidiousFeedItems. */
+export function limitInvidiousFeedResponse(
+  response: InvidiousFeedResponse,
+  max: number = FEED_MAX_ITEMS,
+): InvidiousFeedResponse {
+  const limited = mergeInvidiousFeedItems(response).slice(0, max)
+  const notifications: InvidiousShortVideo[] = []
+  const videos: InvidiousShortVideo[] = []
+
+  for (const item of limited) {
+    if (item.type === "shortVideo") {
+      notifications.push(item)
+    } else {
+      videos.push(item)
+    }
+  }
+
+  return { notifications, videos }
 }
 
 /** Элемент ленты подписок Invidious → карточка сетки (как в поиске). */

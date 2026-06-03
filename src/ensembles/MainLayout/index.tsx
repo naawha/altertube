@@ -5,7 +5,7 @@ import Link from "next/link"
 import type { FC, ReactNode } from "react"
 import { HeaderSearch } from "./ui/HeaderSearch"
 import { useUserState } from "@/models/profile"
-import { useLogout, AuthModal } from "@/features/auth"
+import { useLogout, AuthModal, RegisterModal } from "@/features/auth"
 import dynamic from "next/dynamic"
 
 const ColorSchemeToggle = dynamic(() => import("./ui/ColorSchemeToggle"), {
@@ -18,7 +18,9 @@ interface MainLayoutProps {
 
 const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   const { isAuthenticated, authPending } = useUserState()
-  const [opened, { open, close }] = useDisclosure(false)
+  const [authOpened, { open: openAuth, close: closeAuth }] = useDisclosure(false)
+  const [registerOpened, { open: openRegister, close: closeRegister }] =
+    useDisclosure(false)
 
   const logout = useLogout()
 
@@ -78,7 +80,7 @@ const MainLayout: FC<MainLayoutProps> = ({ children }) => {
                 Выйти
               </Button>
             ) : (
-              <Button variant="default" onClick={open}>
+              <Button variant="default" onClick={openAuth}>
                 Авторизация
               </Button>
             )}
@@ -86,7 +88,16 @@ const MainLayout: FC<MainLayoutProps> = ({ children }) => {
         </Group>
       </AppShell.Header>
       <AppShell.Main>{children}</AppShell.Main>
-      <AuthModal opened={opened} onClose={close} />
+      <AuthModal
+        opened={authOpened}
+        onClose={closeAuth}
+        onRegisterClick={openRegister}
+      />
+      <RegisterModal
+        opened={registerOpened}
+        onClose={closeRegister}
+        onLoginClick={openAuth}
+      />
     </AppShell>
   )
 }

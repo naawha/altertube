@@ -1,7 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 
 import { getBackend, getBackendInternalUrl } from "@/shared/config/backend"
-import type { InvidiousFeedResponse, InvidiousShortVideo } from "@/shared/lib/invidiousFeed"
+import {
+  FEED_MAX_ITEMS,
+  limitInvidiousFeedResponse,
+  type InvidiousFeedResponse,
+  type InvidiousShortVideo,
+} from "@/shared/lib/invidiousFeed"
 
 /** GET /api/v1/auth/feed — лента подписок. */
 export default async function handler(
@@ -41,7 +46,8 @@ async function fetchInvidiousFeed(
   }
 
   const base = getBackendInternalUrl()
-  const url = new URL("/api/v1/auth/feed?max_results=200", `${base}/`)
+  const url = new URL("/api/v1/auth/feed", `${base}/`)
+  url.searchParams.set("max_results", String(FEED_MAX_ITEMS))
 
   const upstream = await fetch(url.href, {
     headers: {
@@ -67,7 +73,8 @@ async function fetchInvidiousFeed(
     return
   }
 
-  res.status(upstream.status).json(body)
+  const feed = limitInvidiousFeedResponse(body as InvidiousFeedResponse)
+  res.status(upstream.status).json(feed)
 }
 
 async function fetchPipedFeed(
@@ -120,7 +127,7 @@ async function fetchPipedFeed(
     return
   }
 
-  const response = mapPipedFeedToInvidious(rows)
+  const response = mapPipedFeedToInvidious(rows.slice(0, FEED_MAX_ITEMS))
   res.status(200).json(response)
 }
 

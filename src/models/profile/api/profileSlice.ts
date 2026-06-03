@@ -30,6 +30,15 @@ const profileSlice = invidiousApi.injectEndpoints({
       invalidatesTags: [RTK_TAGS.AUTH, RTK_TAGS.FEED, RTK_TAGS.SUBSCRIPTIONS, RTK_TAGS.USER_PLAYLISTS],
     }),
 
+    register: builder.mutation<void, { username: string; password: string }>({
+      query: ({ username, password }) => ({
+        url: "/v1/auth/register",
+        method: "POST",
+        body: { username, password },
+      }),
+      invalidatesTags: [RTK_TAGS.AUTH, RTK_TAGS.FEED, RTK_TAGS.SUBSCRIPTIONS, RTK_TAGS.USER_PLAYLISTS],
+    }),
+
     signout: builder.mutation<void, void>({
       query: () => ({
         url: "/v1/auth/logout",
@@ -73,6 +82,7 @@ const profileSlice = invidiousApi.injectEndpoints({
 export const {
   useGetAuthPreferencesQuery,
   useLoginMutation,
+  useRegisterMutation,
   useSignoutMutation,
   useGetFeedQuery,
 } = profileSlice
