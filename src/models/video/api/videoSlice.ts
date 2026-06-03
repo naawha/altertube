@@ -1,5 +1,4 @@
 import { invidiousApi } from "@/shared/api/invidiousAPI"
-import { VideoShortType } from "@/shared/types"
 
 /** Элемент потока из `/streams/:id` (Piped API). */
 export type PipedStreamSource = {
@@ -87,7 +86,7 @@ export type PipedChannelResponse = {
   description?: string
   subscriberCount?: number
   verified?: boolean
-  relatedStreams?: VideoShortType[]
+  relatedStreams?: PipedRelatedStream[]
   nextpage?: string | null
 }
 
