@@ -63,10 +63,11 @@ function pluralizeVideos(n: number): string {
 }
 
 const ChannelCard: FC<ChannelCardProps> = ({ item }) => {
-    const subsLabel = formatSubscribers(item.subscribers)
+    const thumbnail = item.authorThumbnails[0]?.url ?? ""
+    const subsLabel = formatSubscribers(item.subCount)
     const videosLabel =
-        item.videos > 0
-            ? `${item.videos.toLocaleString("ru")} ${pluralizeVideos(item.videos)}`
+        item.videoCount > 0
+            ? `${item.videoCount.toLocaleString("ru")} ${pluralizeVideos(item.videoCount)}`
             : null
 
     return (
@@ -80,12 +81,12 @@ const ChannelCard: FC<ChannelCardProps> = ({ item }) => {
                 flexDirection: "column",
             }}
         >
-            <ChannelOuterLink url={item.url}>
+            <ChannelOuterLink url={item.authorUrl}>
                 <Stack gap="sm" align="center">
                     <Avatar
-                        src={item.thumbnail || undefined}
+                        src={thumbnail || undefined}
                         alt=""
-                        name={item.name}
+                        name={item.author}
                         color="initials"
                         radius="xl"
                         size={88}
@@ -100,7 +101,7 @@ const ChannelCard: FC<ChannelCardProps> = ({ item }) => {
                     </Badge>
                     <Group gap={6} justify="center" wrap="wrap">
                         <Text fw={600} size="sm" ta="center" lineClamp={2}>
-                            {item.name}
+                            {item.author}
                         </Text>
                     </Group>
                 </Stack>

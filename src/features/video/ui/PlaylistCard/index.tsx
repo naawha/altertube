@@ -65,14 +65,14 @@ function pluralizeVideos(n: number): string {
 }
 
 const PlaylistCard: FC<PlaylistCardProps> = ({ item, noChannel }) => {
-  const isMyPlaylist = item.uploaderUrl === ""
-  const playlistId = parsePlaylistIdFromPipedUrl(item.url) ?? ""
+  const isMyPlaylist = item.authorUrl === ""
+  const playlistUrl = `/playlist?list=${encodeURIComponent(item.playlistId)}`
   const [renameOpened, { open: openRename, close: closeRename }] = useDisclosure(false)
   const [deleteOpened, { open: openDelete, close: closeDelete }] = useDisclosure(false)
 
   const videosLabel =
-    item.videos > 0
-      ? `${item.videos.toLocaleString("ru")} ${pluralizeVideos(item.videos)}`
+    item.videoCount > 0
+      ? `${item.videoCount.toLocaleString("ru")} ${pluralizeVideos(item.videoCount)}`
       : null
 
   return (
@@ -87,10 +87,10 @@ const PlaylistCard: FC<PlaylistCardProps> = ({ item, noChannel }) => {
       }}
     >
       <Card.Section>
-        <PlaylistOuterLink url={item.url}>
+        <PlaylistOuterLink url={playlistUrl}>
           <Box pos="relative">
             <AspectRatio ratio={16 / 9}>
-              <Image src={item.thumbnail} alt="" fit="cover" />
+              <Image src={item.playlistThumbnail} alt="" fit="cover" />
             </AspectRatio>
             <Group
               gap={6}
@@ -138,14 +138,14 @@ const PlaylistCard: FC<PlaylistCardProps> = ({ item, noChannel }) => {
       </Card.Section>
       <Stack gap="xs" mt="sm" style={{ flex: 1 }} justify="space-between">
         <PlaylistOuterLink
-          url={item.url}
+          url={playlistUrl}
           style={{ textDecoration: "none", color: "inherit" }}
         >
           <Text fw={500} size="sm" lineClamp={2}>
-            {item.name}
+            {item.title}
           </Text>
         </PlaylistOuterLink>
-        {isMyPlaylist && playlistId ? (
+        {isMyPlaylist && item.playlistId ? (
           <>
             <Group gap={6} grow wrap="nowrap">
               <Button
@@ -179,14 +179,14 @@ const PlaylistCard: FC<PlaylistCardProps> = ({ item, noChannel }) => {
             <RenamePlaylistModal
               opened={renameOpened}
               onClose={closeRename}
-              playlistId={playlistId}
-              initialName={item.name}
+              playlistId={item.playlistId}
+              initialName={item.title}
             />
             <DeletePlaylistModal
               opened={deleteOpened}
               onClose={closeDelete}
-              playlistId={playlistId}
-              playlistName={item.name}
+              playlistId={item.playlistId}
+              playlistName={item.title}
             />
           </>
         ) : null}
@@ -195,14 +195,14 @@ const PlaylistCard: FC<PlaylistCardProps> = ({ item, noChannel }) => {
           <Group gap="sm" align="flex-start" wrap="nowrap">
             <Avatar
               alt=""
-              name={item.uploaderName}
+              name={item.author}
               color="initials"
               radius="xl"
               size="md"
             />
             <Stack gap={2} style={{ flex: 1, minWidth: 0 }}>
               <Text size="xs" fw={500} lineClamp={1}>
-                {item.uploaderName}
+                {item.author}
               </Text>
             </Stack>
           </Group>
