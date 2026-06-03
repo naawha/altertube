@@ -1,0 +1,44 @@
+# Dev: nginx + Next. Upstream — внешние Piped/Invidious (см. development/.env).
+
+services:
+  install_modules:
+    image: development-frontend:dev
+    build:
+      context: ..
+      dockerfile: development/Dockerfile
+    restart: "no"
+    command: ["yarn", "install", "--frozen-lockfile"]
+    working_dir: /app
+    volumes:
+      - ..:/app
+
+  frontend:
+    image: development-frontend:dev
+    build:
+      context: ..
+      dockerfile: development/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      install_modules:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: development
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+      BACKEND: ${BACKEND:-piped}
+      INVIDIOUS_INTERNAL_URL: ${INVIDIOUS_INTERNAL_URL:-https://invidious.syllinn.me}
+      PIPED_INTERNAL_URL: ${PIPED_INTERNAL_URL:-https://api-video.syllinn.me}
+      BACKEND_INTERNAL_URL: ${BACKEND_INTERNAL_URL:-}
+      NEXT_PUBLIC_API_BASE: /api
+    volumes:
+      - ..:/app
+
+  nginx:
+    image: docker.io/library/nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - frontend
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro

@@ -1,0 +1,42 @@
+{
+  "name": "piped-video",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "dev:docker": "next dev -H 0.0.0.0 -p 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "fix-permissions": "chmod +x node_modules/.bin/* 2>/dev/null || true && chmod +x node_modules/*/bin/* 2>/dev/null || true && find node_modules -type f -name '*.sh' -exec chmod +x {} \\; 2>/dev/null || true"
+  },
+  "dependencies": {
+    "@mantine/core": "^7.17.8",
+    "@mantine/hooks": "^7.17.8",
+    "@reduxjs/toolkit": "^2.11.2",
+    "@tabler/icons-react": "^3.41.1",
+    "fast-xml-parser": "^5.5.10",
+    "next": "16.2.2",
+    "next-redux-wrapper": "^8.1.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-redux": "^9.2.0",
+    "shaka-player": "^5.0.9",
+    "@naawha/next-rtk-wrapper": "^1.0.0",
+    "cookies-next": "^6.1.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.2",
+    "eslint-config-prettier": "^10.1.8",
+    "postcss": "^8.5.6",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+.env*
+!.env.example
+# Токен GitHub Packages только через build secret, не класть в слои образа
+.npmrc
+development/postgres/data
+*.md
+.DS_Store

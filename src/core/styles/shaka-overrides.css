@@ -1,0 +1,69 @@
+/* Shaka скрывает label на основной панели (.shaka-overflow-menu-only) — остаётся только иконка.
+   Показываем выбранное разрешение (720p, 1080p, …) вместо иконки. */
+
+.shaka-controls-button-panel .shaka-resolution-button label.shaka-overflow-menu-only,
+.shaka-controls-top-button-panel
+  .shaka-resolution-button
+  label.shaka-overflow-menu-only {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 2px;
+  min-height: 32px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.shaka-controls-button-panel .shaka-resolution-button > .shaka-ui-icon,
+.shaka-controls-top-button-panel .shaka-resolution-button > .shaka-ui-icon {
+  display: none;
+}
+
+/* При включённом ABR: в .shaka-current-auto-quality уже «720p» и т.д., скрываем «Auto» */
+.shaka-resolution-button
+  label:has(.shaka-current-auto-quality:not([style*="display: none"]))
+  .shaka-current-selection-span {
+  display: none !important;
+}
+
+.shaka-resolution-button label {
+  background-image: none !important;
+  justify-content: center;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+}
+
+.shaka-resolution-button label > span:first-child {
+  display: none !important;
+}
+
+.shaka-current-auto-quality {
+  margin: 0;
+  padding: 0;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+}
+
+.shaka-current-selection-span {
+  margin: 0;
+  padding: 0;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+}
+
+/* Не дублировать «HD» / «4K» в <sup>, если рядом уже полная подпись из getResolutionLabel_ */
+.shaka-resolution-button .shaka-current-quality-mark {
+  display: none !important;
+}
+
+.shaka-overflow-playback-rate-mark {
+  display: block !important;
+  right: -2px;
+}
+
+.shaka-current-quality-mark {
+  display: none !important;
+}
