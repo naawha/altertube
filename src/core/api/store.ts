@@ -15,9 +15,7 @@ function getCookieHeaderFromContext(context?: Context): string | undefined {
         : undefined
   if (!req?.headers) return undefined
   const cookie = req.headers.cookie
-  if (typeof cookie === "string") return cookie
-  if (Array.isArray(cookie)) return cookie.join("; ")
-  return undefined
+  return typeof cookie === "string" ? cookie : undefined
 }
 
 export function makeStore(context?: Context) {
