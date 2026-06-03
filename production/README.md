@@ -11,6 +11,23 @@
 Интернет → infra (443, cert) → 127.0.0.1:8082 → app.conf (docker) → Next / Invidious
 ```
 
+## GitHub Packages (обязательно для сборки)
+
+`@naawha/next-rtk-wrapper` — приватный пакет. На сервере перед `docker compose build`:
+
+```bash
+cp .npmrc.example .npmrc
+# вставьте PAT с правом read:packages для org naawha
+```
+
+Файл `.npmrc` в git не попадает; при сборке монтируется как Docker secret (не остаётся в слоях образа).
+
+Проверка токена:
+
+```bash
+npm view @naawha/next-rtk-wrapper version --registry=https://npm.pkg.github.com
+```
+
 ## Запуск приложения
 
 ```bash

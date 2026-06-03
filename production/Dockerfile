@@ -4,7 +4,9 @@ FROM node:20-bookworm-slim AS deps
 WORKDIR /app
 RUN corepack enable && corepack prepare yarn@1.22.22 --activate
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+# .npmrc не копируется в образ — монтируется secret при сборке (GitHub Packages)
+RUN --mount=type=secret,id=npmrc,target=/app/.npmrc \
+    yarn install --frozen-lockfile
 
 FROM node:20-bookworm-slim AS builder
 WORKDIR /app
