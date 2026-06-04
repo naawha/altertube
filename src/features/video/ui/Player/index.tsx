@@ -1,8 +1,10 @@
 import { AspectRatio, Text } from "@mantine/core"
 import type { PipedStreamResponse } from "@/models/video/api/videoSlice"
 import { pickPlayback } from "@/models/video/lib/pickPlayback"
+import { usePrefersNativePlayback } from "@/models/video/lib/playbackPlatform"
 import ShakaPlayer from "../ShakaPlayer"
 import HTML5Player from "../HTML5Player"
+import NativePlayer from "../NativePlayer"
 import type { FC } from "react"
 
 interface PlayerProps {
@@ -10,7 +12,8 @@ interface PlayerProps {
 }
 
 const Player: FC<PlayerProps> = ({ data }) => {
-  const pick = pickPlayback(data)
+  const preferNative = usePrefersNativePlayback()
+  const pick = pickPlayback(data, { preferNative })
 
   if (!pick) {
     return (
@@ -27,6 +30,8 @@ const Player: FC<PlayerProps> = ({ data }) => {
         mimeType={pick.mimeType}
         qualities={pick.qualities}
       />
+    ) : pick.kind === "native" ? (
+      <NativePlayer src={pick.url} qualities={pick.qualities} />
     ) : (
       <HTML5Player
         key={`${pick.videoUrl}|${pick.audioUrl}`}
